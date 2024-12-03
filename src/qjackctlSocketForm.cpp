@@ -28,7 +28,11 @@
 #include "qjackctlAliases.h"
 
 #include <QMessageBox>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QRegularExpression>
+#else
+#include <QRegExp>
+#endif
 #include <QButtonGroup>
 #include <QHeaderView>
 #include <QPixmap>
@@ -916,7 +920,11 @@ void qjackctlSocketForm::clientNameChanged (void)
 		if (!sSocketName.isEmpty()) {
 			int iSocketNo = 0;
 			QString sSocketMask = sSocketName;
+	#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 			sSocketMask.remove(QRegularExpression("[ |0-9]+$")).append(" %1");
+	#else
+			sSocketMask.remove(QRegExp("[ |0-9]+$")).append(" %1");
+	#endif
 			do { sSocketName = sSocketMask.arg(++iSocketNo); }
 			while (m_pSocketList->findSocket(sSocketName, iSocketType));
 			m_ui.SocketNameLineEdit->setText(sSocketName);

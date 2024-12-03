@@ -94,7 +94,11 @@ qjackctlSessionInfraClientItemEditor::qjackctlSessionInfraClientItemEditor (
 
 	QHBoxLayout *pLayout = new QHBoxLayout();
 	pLayout->setSpacing(0);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 	pLayout->setContentsMargins(0, 0, 0, 0);
+#else
+	pLayout->setMargin(0);
+#endif
 	pLayout->addWidget(m_pItemEdit);
 	if (m_pBrowseButton)
 		pLayout->addWidget(m_pBrowseButton);

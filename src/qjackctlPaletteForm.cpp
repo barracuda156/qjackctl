@@ -970,22 +970,38 @@ bool qjackctlPaletteForm::PaletteModel::setData (
 		if (m_generate) {
 			m_palette.setBrush(QPalette::Inactive, cr, color);
 			switch (cr) {
+	#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 				case QPalette::WindowText:
+	#else
+				case QPalette::Foreground:
+	#endif
 				case QPalette::Text:
 				case QPalette::ButtonText:
 				case QPalette::Base:
 					break;
 				case QPalette::Dark:
+	#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 					m_palette.setBrush(QPalette::Disabled, QPalette::WindowText, color);
+	#else
+				m_palette.setBrush(QPalette::Disabled, QPalette::Foreground, color);
+	#endif
 					m_palette.setBrush(QPalette::Disabled, QPalette::Dark, color);
 					m_palette.setBrush(QPalette::Disabled, QPalette::Text, color);
 					m_palette.setBrush(QPalette::Disabled, QPalette::ButtonText, color);
 					index_begin = PaletteModel::index(0, 0);
 					index_end = PaletteModel::index(m_nrows - 1, 3);
 					break;
+	#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 				case QPalette::Window:
+	#else
+				case QPalette::Background:
+	#endif
 					m_palette.setBrush(QPalette::Disabled, QPalette::Base, color);
+	#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 					m_palette.setBrush(QPalette::Disabled, QPalette::Window, color);
+	#else
+					m_palette.setBrush(QPalette::Disabled, QPalette::Background, color);
+	#endif
 					index_begin = PaletteModel::index(QPalette::Base, 0);
 					break;
 				case QPalette::Highlight:
@@ -1264,7 +1280,11 @@ qjackctlPaletteForm::ColorEditor::ColorEditor ( QWidget *parent )
 	: QWidget(parent)
 {
 	QLayout *layout = new QHBoxLayout(this);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 	layout->setContentsMargins(0, 0, 0, 0);
+#else
+	layout->setMargin(0);
+#endif
 	m_button = new qjackctlPaletteForm::ColorButton(this);
 	layout->addWidget(m_button);
 	QObject::connect(m_button,
@@ -1310,7 +1330,11 @@ qjackctlPaletteForm::RoleEditor::RoleEditor ( QWidget *parent )
 	m_edited = false;
 
 	QHBoxLayout *layout = new QHBoxLayout(this);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 	layout->setContentsMargins(0, 0, 0, 0);
+#else
+	layout->setMargin(0);
+#endif
 	layout->setSpacing(0);
 
 	m_label = new QLabel(this);

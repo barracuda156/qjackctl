@@ -127,8 +127,13 @@ qjackctlSetupForm::qjackctlSetupForm ( QWidget *pParent )
 	m_iDirtyOptions = 0;
 
 	// Set dialog validators...
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 	m_ui.PresetComboBox->setValidator(
 		new QRegularExpressionValidator(QRegularExpression("[\\w-]+"), m_ui.PresetComboBox));
+#else
+	m_ui.PresetComboBox->setValidator(
+		new QRegExpValidator(QRegExp("[\\w-]+"), m_ui.PresetComboBox));
+#endif
 	m_ui.FramesComboBox->setValidator(
 		new QIntValidator(m_ui.FramesComboBox));
 	m_ui.SampleRateComboBox->setValidator(
@@ -626,7 +631,11 @@ void qjackctlSetupForm::setup ( qjackctlSetup *pSetup )
 		|| !font.fromString(m_pSetup->sMessagesFont))
 		font = QFont("Monospace", 8);
 	pal = m_ui.MessagesFontTextLabel->palette();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 	pal.setColor(QPalette::Window, pal.base().color());
+#else
+	pal.setColor(QPalette::Background, pal.base().color());
+#endif
 	m_ui.MessagesFontTextLabel->setPalette(pal);
 	m_ui.MessagesFontTextLabel->setFont(font);
 	m_ui.MessagesFontTextLabel->setText(
@@ -636,7 +645,11 @@ void qjackctlSetupForm::setup ( qjackctlSetup *pSetup )
 		|| !font.fromString(m_pSetup->sConnectionsFont))
 		font = QFont(sSansSerif, 10);
 	pal = m_ui.ConnectionsFontTextLabel->palette();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 	pal.setColor(QPalette::Window, pal.base().color());
+#else
+	pal.setColor(QPalette::Background, pal.base().color());
+#endif
 	m_ui.ConnectionsFontTextLabel->setPalette(pal);
 	m_ui.ConnectionsFontTextLabel->setFont(font);
 	m_ui.ConnectionsFontTextLabel->setText(
@@ -1529,12 +1542,24 @@ void qjackctlSetupForm::chooseDisplayFont2 (void)
 void qjackctlSetupForm::toggleDisplayEffect ( bool bOn )
 {
 	QPalette pal;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 	pal.setColor(QPalette::WindowText, Qt::green);
+#else
+	pal.setColor(QPalette::Foreground, Qt::green);
+#endif
 	if (bOn) {
 		QPixmap pm(":/images/displaybg1.png");
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 		pal.setBrush(QPalette::Window, QBrush(pm));
+#else
+		pal.setBrush(QPalette::Background, QBrush(pm));
+#endif
 	} else {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 		pal.setColor(QPalette::Window, Qt::black);
+#else
+		pal.setColor(QPalette::Background, Qt::black);
+#endif
 	}
 	m_ui.DisplayFont1TextLabel->setPalette(pal);
 	m_ui.DisplayFont2TextLabel->setPalette(pal);

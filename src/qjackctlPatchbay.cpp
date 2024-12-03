@@ -34,14 +34,16 @@
 #include <QMenu>
 #include <QToolTip>
 #include <QScrollBar>
-#include <QRegularExpression>
 
 #include <QDragEnterEvent>
 #include <QDragMoveEvent>
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QRegularExpression>
 #include <QMimeData>
 #include <QDrag>
+#else
+#include <QRegExp>
 #endif
 
 // Interactivity socket form.
@@ -589,7 +591,11 @@ bool qjackctlSocketList::copySocketItem (void)
 		int iSocketNo = 1;
 		QString sSocketName = pSocketItem->socketName();;
 		QString sSocketMask = sSocketName;
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 		sSocketMask.remove(QRegularExpression("[ |0-9]+$")).append(" %1");
+#else
+		sSocketMask.remove(QRegExp("[ |0-9]+$")).append(" %1");
+#endif
 		const int iSocketType = pSocketItem->socketType();
 		do { sSocketName = sSocketMask.arg(++iSocketNo); }
 		while (findSocket(sSocketName, iSocketType));
